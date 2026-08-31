@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Development Assessment</title>
+    <link rel="icon" type="image/x-icon" href="Assets/favicon.webp">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Merriweather', serif;
+            background: linear-gradient(135deg, #fff6ea 100%, #fff6ea 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* === HEADER === */
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #2a4b9a;
+            color: white;
+            font-family: 'Quicksand', serif;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+            height: 100px;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 24px;
+            position: relative;
+        }
+
+        .logo-img {
+            max-height: 54px;
+            width: auto;
+            border-radius: 50%;
+        }
+
+        .header-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.35em;
+            font-weight: 500;
+            opacity: 0.95;
+            text-align: center;
+        }
+
+        /* === START PAGE === */
+        #startPage {
+            padding: 140px 20px 80px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .start-content {
+            max-width: 720px;
+            width: 100%;
+            text-align: center;
+            background: white;
+            padding: 45px 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .start-content h1 {
+            color: #2a4b9a;
+            font-size: 2.2em;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 30px;
+        }
+
+        .start-content .intro-text {
+            color: #333;
+            font-size: 1.15em;
+            line-height: 1.8;
+            text-align: left;
+            margin-bottom: 35px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #007c78 0%, #007c78 100%);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: all 0.3s;
+            font-family: 'Merriweather', serif;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 124, 120, 0.3);
+        }
+
+        /* === QUIZ CONTAINER === */
+        #quizContainer {
+            padding: 140px 20px 80px;
+            min-height: 100vh;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .quiz-content {
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity:0; transform:translateY(20px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+
+        .question-number {
+            color:#2a4b9a;
+            font-weight:bold;
+            font-size:1.1em;
+            margin-bottom:5px;
+        }
+
+        .bouwsteen-label {
+            color: #007c78;
+            font-size: 1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .question-text {
+            font-size:1.9em;
+            color:#333;
+            margin-bottom:40px;
+            font-weight:600;
+            line-height:1.4;
+        }
+
+        .answer-option {
+            background: white;
+            border:2px solid #e2d8c9;
+            border-radius:15px;
+            padding:25px 30px;
+            margin-bottom:18px;
+            cursor:pointer;
+            transition:all 0.3s;
+            display:flex;
+            align-items:center;
+            min-height:75px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .answer-option:hover {
+            border-color:#2a4b9a;
+            transform:translateX(5px);
+            background: #faf6f0;
+        }
+
+        .answer-option.selected {
+            background: white;
+            border-color:#2a4b9a;
+            box-shadow: 0 4px 15px rgba(35, 55, 87, 0.1);
+        }
+
+        .answer-label {
+            font-size:1.15em;
+            color:#333;
+            font-weight:500;
+            padding-left:40px;
+            position:relative;
+            flex:1;
+            line-height:1.5;
+        }
+
+        .answer-label::before {
+            content:'';
+            position:absolute;
+            left:0; top:50%;
+            transform:translateY(-50%);
+            width:22px; height:22px;
+            border:3px solid #2a4b9a;
+            border-radius:50%;
+            background:white;
+            transition:all 0.2s;
+        }
+
+        .answer-option.selected .answer-label::before {
+            background:#2a4b9a;
+            box-shadow:inset 0 0 0 4px white;
+        }
+
+        input[type="radio"] {
+            position:absolute;
+            opacity:0;
+            width:0;
+            height:0;
+        }
+
+        .progress-bar {
+            height:12px;
+            background:#e9ecef;
+            border-radius:10px;
+            margin-bottom:50px;
+            width: 100%;
+        }
+
+        .progress-fill {
+            height:100%;
+            background:linear-gradient(90deg,#2a4b9a 0%,#2a4b9a 100%);
+            transition:width 0.5s;
+            border-radius:10px;
+            width:0%;
+        }
+
+        .quiz-buttons {
+            display:flex;
+            gap:15px;
+            margin-top:40px;
+        }
+
+        .btn {
+            padding:18px 35px;
+            border:none;
+            border-radius:12px;
+            font-size:1.1em;
+            font-weight:600;
+            cursor:pointer;
+            transition:all 0.3s;
+            flex:1;
+            font-family:'Merriweather', sans-serif;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-next {
+            background:linear-gradient(135deg,#007c78 0%,#007c78 100%);
+            color:white;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            transform:translateY(-2px);
+            box-shadow:0 8px 20px rgba(0, 124, 120, 0.3);
+        }
+
+        .btn-next:disabled {
+            opacity:0.4;
+            cursor:not-allowed;
+        }
+
+        .btn-back {
+            background:#f3d8cf;
+            color:white;
+        }
+
+        .btn-back:hover {
+            transform:translateY(-2px);
+            box-shadow:0 8px 20px rgba(243, 216, 207, 1);
+        }
+
+        /* === RESULTAAT PAGES === */
+        .result-page {
+            display:none;
+            animation:fadeIn 0.5s;
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        .result-page.active {
+            display:block;
+        }
+
+        .result-header {
+            text-align: center;
+            padding: 20px 0 40px;
+        }
+
+        .result-header img {
+            max-width: 280px;
+            height: auto;
+            border-radius: 50%;
+            border: 6px solid white;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            margin-bottom: 25px;
+        }
+
+        .result-header h2 {
+            font-size: 3em;
+            margin: 0.2em 0 0.4em;
+            font-weight: 800;
+            color: #2a4b9a;
+        }
+
+        .result-content {
+            text-align:center;
+            padding: 0 20px 40px;
+        }
+
+        .result-content p {
+            font-size:1.3em;
+            color:#333;
+            line-height:1.8;
+        }
+
+        .result-footer-btn {
+            margin-top: 40px;
+            background: #007c78;
+            color: white;
+            padding: 20px 40px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transition: all 0.3s;
+        }
+        
+        .result-footer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 124, 120, 0.3);
+        }
+
+        /* === EMAIL CAPTURE OVERLAY === */
+        .email-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(42, 75, 154, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+
+        .email-capture-box {
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+
+        .email-capture-box h2 {
+            color: #2a4b9a;
+            margin-bottom: 15px;
+            font-size: 1.9em;
+            font-weight: 800;
+        }
+
+        .email-capture-box p {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .email-capture-box label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 600;
+            font-family: 'Quicksand', sans-serif;
+            text-align: left;
+        }
+
+        .email-capture-box input[type="text"],
+        .email-capture-box input[type="email"] {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e2d8c9;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-family: 'Merriweather', serif;
+            background: white;
+            margin-bottom: 18px;
+        }
+
+        .email-capture-box .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 0.98em;
+            line-height: 1.5;
+            text-align: left;
+            font-weight: normal;
+        }
+
+        .email-capture-box .checkbox-label input {
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .btn-optin-submit {
+            background: linear-gradient(135deg, #007c78 0%, #007c78 100%);
+            color: white;
+            padding: 18px 35px;
+            border-radius: 50px;
+            font-size: 1.15em;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: all 0.3s;
+            width: 100%;
+            font-family: 'Merriweather', serif;
+        }
+
+        .btn-optin-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 124, 120, 0.3);
+        }
+
+        .btn-optin-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .site-header {
+                height: 70px;
+            }
+            #startPage, #quizContainer {
+                padding: 110px 16px 60px;
+            }
+            .header-title {
+                font-size: 1.15em;
+            }
+            .question-text {
+                font-size: 1.5em;
+            }
+            .start-content h1 {
+                font-size: 1.8em;
+            }
+            .btn-start {
+                padding: 16px 30px;
+                font-size: 1.1em;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .result-header img {
+                max-width: 220px;
+            }
+            .result-header h2 {
+                font-size: 2.4em;
+            }
+            .email-capture-box {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="Assets/logo-placeholder.svg" alt="Demo Company Logo" class="logo-img">
+            </div>
+            <div class="header-title">Demo Company - Online Assessment</div>
+        </div>
+    </header>
+
+    <!-- STARTPAGINA -->
+    <div id="startPage">
+        <div class="start-content">
+            <h1>Hoe sterk is jouw software development aanpak?</h1>
+            
+            <div class="intro-text">
+                <p style="margin-bottom:20px;">
+                    Goede vraag. Sterke software ontstaat niet alleen door code te schrijven.
+                </p>
+                <p style="margin-bottom:20px;">
+                    <strong>Goede software steunt op vijf bouwstenen:</strong> je technische basis, je architectuur, je gebruikers, de koppeling met het product en je beslissingskracht. Goede code zonder duidelijke gebruiker mist richting. Een goed idee zonder technische basis blijft een idee. Pas als de bouwstenen samenkomen, ontstaat software die betrouwbaar, onderhoudbaar en waardevol is.
+                </p>
+                <p style="margin-bottom:20px;">
+                    Deze assessment kijkt naar alle vijf, in 6 vragen en ongeveer 2 minuten. Je krijgt direct een profiel van je development-aanpak.
+                </p>
+                <p>
+                    Er zijn geen goede of foute antwoorden. Kies wat het beste bij jouw manier van software ontwikkelen past.
+                </p>
+            </div>
+
+            <button id="startQuizBtn" class="btn-start">
+                Start de assessment (2 min) →
+            </button>
+        </div>
+    </div>
+
+    <!-- QUIZ EN RESULTATEN -->
+    <div id="quizContainer">
+        <div class="quiz-content">
+            <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
+
+            <div class="question-container" data-question="1">
+                <div class="question-number">Vraag 1 van 6</div>
+                <div class="bouwsteen-label">Bouwsteen 1: jouw technische startpositie</div>
+                <div class="question-text">Waar staat jouw softwareproject nu?</div>
+                <label class="answer-option"><input type="radio" name="q1" value="4"><span class="answer-label">De requirements zijn helder en ik wil goed starten zonder kostbare tijd te verliezen.</span></label>
+                <label class="answer-option"><input type="radio" name="q1" value="3"><span class="answer-label">Ik ben ooit begonnen, maar andere prioriteiten namen het over. De code staat voorlopig stil.</span></label>
+                <label class="answer-option"><input type="radio" name="q1" value="2"><span class="answer-label">Ik heb al veel onderzocht en gebouwd, maar onderweg is de focus verdwenen.</span></label>
+                <label class="answer-option"><input type="radio" name="q1" value="1"><span class="answer-label">Het idee zit al lang in mijn hoofd, maar ik weet nog niet goed waar ik technisch moet beginnen.</span></label>
+            </div>
+
+            <div class="question-container" data-question="2">
+                <div class="question-number">Vraag 2 van 6</div>
+                <div class="bouwsteen-label">Bouwsteen 2: de koppeling met het product</div>
+                <div class="question-text">Stel, jouw software staat live. Wat verandert er dan voor jou?</div>
+                <label class="answer-option"><input type="radio" name="q2" value="4"><span class="answer-label">Gebruikers krijgen direct waarde, omdat de software een concreet probleem oplost.</span></label>
+                <label class="answer-option"><input type="radio" name="q2" value="3"><span class="answer-label">Mijn product wordt zichtbaar en laat zien wat technisch en inhoudelijk mogelijk is.</span></label>
+                <label class="answer-option"><input type="radio" name="q2" value="2"><span class="answer-label">Ik wil eindelijk iets bouwen dat al lang op mijn roadmap staat.</span></label>
+                <label class="answer-option"><input type="radio" name="q2" value="1"><span class="answer-label">Eerlijk? Zo groot durf ik nog niet te denken, al zou ik dat wel willen.</span></label>
+            </div>
+
+            <div class="question-container" data-question="3">
+                <div class="question-number">Vraag 3 van 6</div>
+                <div class="bouwsteen-label">Bouwsteen 2: de koppeling met het product</div>
+                <div class="question-text">Software vraagt tijd, energie en budget. Hoe kijk jij daarnaar?</div>
+                <label class="answer-option"><input type="radio" name="q4" value="4"><span class="answer-label">Als een investering. Ik wil vooral weten hoe ik de technische keuzes slim laat bijdragen aan het product.</span></label>
+                <label class="answer-option"><input type="radio" name="q4" value="3"><span class="answer-label">Ik geloof dat het zich terugbetaalt, maar ik zie nog niet precies welke aanpak het beste werkt.</span></label>
+                <label class="answer-option"><input type="radio" name="q4" value="2"><span class="answer-label">Dat is precies mijn twijfel. Wat als ik veel bouw en het product uiteindelijk te weinig waarde oplevert?</span></label>
+                <label class="answer-option"><input type="radio" name="q4" value="1"><span class="answer-label">Zover ben ik nog niet. Eerst wil ik weten of dit technisch en productmatig echt bij mij past.</span></label>
+            </div>
+
+            <div class="question-container" data-question="4">
+                <div class="question-number">Vraag 4 van 6</div>
+                <div class="bouwsteen-label">Bouwsteen 3: jouw gebruiker</div>
+                <div class="question-text">Voor wie bouw jij deze software?</div>
+                <label class="answer-option"><input type="radio" name="q3" value="4"><span class="answer-label">Voor mijn ideale gebruiker. Ik weet welk probleem de software oplost en wat de gebruiker ermee bereikt.</span></label>
+                <label class="answer-option"><input type="radio" name="q3" value="3"><span class="answer-label">Voor mensen in mijn doelgroep en netwerk. Alleen kan ik de doelgroep nog scherper definiëren.</span></label>
+                <label class="answer-option"><input type="radio" name="q3" value="2"><span class="answer-label">Voor iedereen die iets aan mijn idee kan hebben. Het probleem is relevant voor veel mensen.</span></label>
+                <label class="answer-option"><input type="radio" name="q3" value="1"><span class="answer-label">Daar heb ik nog geen scherp antwoord op. Eerst bouwen, dacht ik altijd.</span></label>
+            </div>
+
+            <div class="question-container" data-question="5">
+                <div class="question-number">Vraag 5 van 6</div>
+                <div class="bouwsteen-label">Bouwsteen 4: jouw technische oplossing</div>
+                <div class="question-text">Wat maakt jouw software anders dan bestaande oplossingen?</div>
+                <label class="answer-option"><input type="radio" name="q5" value="4"><span class="answer-label">Mijn eigen aanpak, ervaring en/of architectuur. Ik weet precies welke waarde mijn software toevoegt.</span></label>
+                <label class="answer-option"><input type="radio" name="q5" value="3"><span class="answer-label">Ik voel dat het anders is, maar ik kan de technische of productmatige meerwaarde nog niet scherp uitleggen.</span></label>
+                <label class="answer-option"><input type="radio" name="q5" value="2"><span class="answer-label">Er bestaan al veel vergelijkbare tools, dat maakt me soms onzeker. Toch heeft mijn oplossing een eigen waardepropositie.</span></label>
+                <label class="answer-option"><input type="radio" name="q5" value="1"><span class="answer-label">Daar heb ik eerlijk gezegd nog niet over nagedacht. Eerst maar eens een werkende versie, dacht ik altijd.</span></label>
+            </div>
+
+            <div class="question-container" data-question="6">
+                <div class="question-number">Vraag 6 van 6</div>
+                <div class="bouwsteen-label">Bouwsteen 5: jouw beslissingskracht</div>
+                <div class="question-text">Stel, iemand laat jou zwart op wit zien hoe jouw software gebruikers en waarde oplevert. Wat doe jij?</div>
+                <label class="answer-option"><input type="radio" name="q6" value="4"><span class="answer-label">Dan begin ik. Vandaag nog.</span></label>
+                <label class="answer-option"><input type="radio" name="q6" value="3"><span class="answer-label">Dan wil ik eerst precies begrijpen hoe dat technisch werkt. Daarna beslis ik.</span></label>
+                <label class="answer-option"><input type="radio" name="q6" value="2"><span class="answer-label">Dan word ik nieuwsgierig. Maar ik heb meer bewijs nodig om echt te beginnen.</span></label>
+                <label class="answer-option"><input type="radio" name="q6" value="1"><span class="answer-label">Dan vind ik het nog steeds spannend. Een softwareproduct bouwen is een grote stap.</span></label>
+            </div>
+
+            <div class="result-page" id="resultBuilder">
+                <div class="result-header">
+                    <img src="Assets/impactmaker-placeholder.svg" alt="De Builder">
+                    <h2>Jouw profiel: De Builder</h2>
+                </div>
+                <div class="result-content">
+                    <p><span class="user-firstname"></span>, eerst het antwoord op je vraag: jouw software development aanpak heeft sterke potentie. Vier van de vijf bouwstenen staan bij jou al stevig.</p>
+                    <br><p>Jouw technische basis is er klaar voor. De vraag is: jij ook?</p>
+                    <p>Er is nog precies één ding dat bepaalt of jouw software een sterk product wordt of een onafgemaakt project. En het is niet alleen de code.</p>
+                    <br><p>Wat het wél is, zie je in deze demo. Je belangrijkste aandachtspunt is: <strong>"<span class="user-firstname"></span>, dit is wat De Builder nog tegenhoudt"</strong></p>
+                    <br><p>Je persoonlijke profiel laat zien waar je development-aanpak sterk is en waar nog winst zit. Voor je portfolio kun je hieronder de bijbehorende developer resources bekijken: 
+                    <strong><br><br>Twee developer-resources die beginnen aan je boek zó gemakkelijk maken. Want ik weet dat je druk bent, dus dit is geen e-book dat blijft liggen. 
+                    <br>Gebruik ze als inspiratie voor je volgende development-project.</strong></p>
+                    <br><p><i><strong>PS.</strong> Dit is een portfolio-demo; er wordt geen echte marketingmail verstuurd.</i></p><br>
+
+                    <a href="https://example.com/portfolio-demo-checkout" class="btn result-footer-btn">Ja, ik wil de Developer Resource Pack →</a>
+                </div>
+            </div>
+
+            <div class="result-page" id="resultArchitect">
+                <div class="result-header">
+                    <img src="Assets/strateeg-placeholder.svg" alt="De Architect">
+                    <h2>Jouw profiel: De Architect</h2>
+                </div>
+                <div class="result-content">
+                    <p><span class="user-firstname"></span>, eerst het antwoord op je vraag: jouw software development aanpak heeft potentie. Meerdere bouwstenen staan al, maar nog niet allemaal.</p>
+                    <br><p>Je technische aanpak kan uitgroeien tot een sterk product. Eén onderdeel ontbreekt nog. En nee, het is niet simpelweg meer kennis, meer tijd of meer code.</p>
+                    <br><p>Wat het wél is, zie je in je profiel. Je belangrijkste ontwikkelpunt is: <strong>"<span class="user-firstname"></span>, dit is wat De Architect nog mist"</strong></p>
+                    <br><p>Je persoonlijke profiel laat zien waar je development-aanpak sterk is en waar nog winst zit. Voor je portfolio kun je hieronder de bijbehorende developer resources bekijken: 
+                    <br><br>twee developer-resources die beginnen aan je boek zó gemakkelijk maken. Want ik weet dat je druk bent, dus dit is geen e-book dat blijft liggen. 
+                    <br>Gebruik ze als inspiratie voor je volgende development-project.</p>
+                    <br><p><i><strong>PS.</strong> Dit is een portfolio-demo; er wordt geen echte marketingmail verstuurd.</i></p><br>
+                    
+                    <a href="https://example.com/portfolio-demo-checkout" class="btn result-footer-btn">Ja, ik wil de Developer Resource Pack →</a>
+                </div>
+            </div>
+
+            <div class="result-page" id="resultProblemSolver">
+                <div class="result-header">
+                    <img src="Assets/stillekracht-placeholder.svg" alt="De Problem Solver">
+                    <h2>Jouw profiel: De Problem Solver</h2>
+                </div>
+                <div class="result-content">
+                    <p><span class="user-firstname"></span>, eerst het antwoord op je vraag: de potentie is er. De belangrijkste bouwsteen ontbreekt alleen nog: vertrouwen in je eigen technische aanpak.</p>
+                    <br><p>Je technische idee is groter dan je nu misschien durft te denken. Er is een reden dat dit project je blijft bezighouden: er zit een probleem achter dat je echt wilt oplossen.</p>
+                    <br><p>Je belangrijkste aandachtspunt staat in je profiel. Focus eerst op een kleine, betrouwbare eerste versie. <strong>"<span class="user-firstname"></span>, dit is waarom jouw boek jou niet loslaat"</strong></p>
+                    <br><p>Je persoonlijke profiel laat zien waar je development-aanpak sterk is en waar nog winst zit. Voor je portfolio kun je hieronder de bijbehorende developer resources bekijken: 
+                    <br><br>twee developer-resources die beginnen aan je boek zó gemakkelijk maken. Want ik weet dat je druk bent, dus dit is geen e-book dat blijft liggen. 
+                    <br>Gebruik ze als inspiratie voor je volgende development-project.</p>
+                    <br><p><i><strong>PS.</strong> Dit is een portfolio-demo; er wordt geen echte marketingmail verstuurd.</i></p><br>
+                    
+                    <a href="https://example.com/portfolio-demo-checkout" class="btn result-footer-btn">Ja, ik wil de Developer Resource Pack →</a>
+                </div>
+            </div>
+
+            <div class="quiz-buttons" id="quizButtons">
+                <button class="btn btn-back" id="backBtn" style="display:none;">← Vorige</button>
+                <button class="btn btn-next" id="nextBtn" disabled>Volgende →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 6;
+        let totalScore = 0;
+        let userData = { name: '', email: '' };
+        let isQuizFinished = false;
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // START BUTTON
+        document.getElementById('startQuizBtn').addEventListener('click', () => {
+            document.getElementById('startPage').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'flex';
+            document.querySelector('[data-question="1"]').classList.add('active');
+            history.pushState({ page: 'quiz', question: 1 }, '');
+            updateProgress();
+            scrollToTop();
+        });
+
+        // State render voor browser history
+        function renderState(state) {
+            if (!state) {
+                document.getElementById('startPage').style.display = 'flex';
+                document.getElementById('quizContainer').style.display = 'none';
+                return;
+            }
+
+            if (state.page === 'quiz') {
+                document.getElementById('startPage').style.display = 'none';
+                document.getElementById('quizContainer').style.display = 'flex';
+                
+                document.querySelectorAll('.question-container').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.result-page').forEach(el => el.classList.remove('active'));
+                document.getElementById('quizButtons').style.display = 'flex';
+                document.querySelector('.progress-bar').style.display = 'block';
+
+                currentQuestion = state.question;
+                document.querySelector(`[data-question="${currentQuestion}"]`).classList.add('active');
+
+                if (currentQuestion === 1) {
+                    document.getElementById('backBtn').style.display = 'none';
+                } else {
+                    document.getElementById('backBtn').style.display = 'block';
+                }
+
+                if (currentQuestion === totalQuestions) {
+                    document.getElementById('nextBtn').textContent = 'Bekijk Resultaat →';
+                } else {
+                    document.getElementById('nextBtn').textContent = 'Volgende →';
+                }
+
+                const hasChecked = document.querySelector(`[data-question="${currentQuestion}"] input:checked`);
+                document.getElementById('nextBtn').disabled = !hasChecked;
+
+                updateProgress();
+            } else if (state.page === 'result') {
+                document.getElementById('startPage').style.display = 'none';
+                document.getElementById('quizContainer').style.display = 'flex';
+                showResult();
+            }
+        }
+
+        window.addEventListener('popstate', function(event) {
+            renderState(event.state);
+        });
+
+        function updateProgress() {
+            const progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        document.querySelectorAll('.answer-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                const qContainer = this.closest('.question-container');
+                qContainer.querySelectorAll('.answer-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                this.querySelector('input').checked = true;
+                document.getElementById('nextBtn').disabled = false;
+
+                const previous = qContainer.dataset.score ? parseInt(qContainer.dataset.score) : 0;
+                totalScore -= previous;
+                const score = parseInt(this.querySelector('input').value);
+                totalScore += score;
+                qContainer.dataset.score = score;
+            });
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', async () => {
+            document.querySelector(`[data-question="${currentQuestion}"]`).classList.remove('active');
+            currentQuestion++;
+
+            if (currentQuestion <= totalQuestions) {
+                history.pushState({ page: 'quiz', question: currentQuestion }, '');
+                
+                document.querySelector(`[data-question="${currentQuestion}"]`).classList.add('active');
+                document.getElementById('backBtn').style.display = 'block';
+                document.getElementById('nextBtn').disabled = true;
+
+                if (currentQuestion === totalQuestions) {
+                    document.getElementById('nextBtn').textContent = 'Bekijk Resultaat →';
+                }
+            } else {
+                // Na laatste vraag → toon email capture
+                showEmailCapture();
+            }
+
+            updateProgress();
+            scrollToTop();
+        });
+
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.history.back();
+        });
+
+        function showEmailCapture() {
+            document.querySelectorAll('.question-container, .quiz-buttons, .progress-bar').forEach(el => {
+                el.style.display = 'none';
+            });
+
+            const overlay = document.createElement('div');
+            overlay.className = 'email-overlay';
+            overlay.innerHTML = `
+                <div class="email-capture-box">
+                    <h2>Laatste stap!</h2>
+                    <p>Vul demo-gegevens in om je persoonlijke development-profiel te bekijken. In deze portfolio-versie wordt niets extern verstuurd.</p>
+                    <p style="color:#d32f2f; font-size:0.95em; margin-bottom:20px; font-weight:500;">
+                        Velden met een <span style="color:#d32f2f;">*</span> zijn verplicht
+                    </p>
+                    <form id="emailForm">
+                        <div style="margin-bottom:5px; text-align:left;">
+                            <label for="name">Je naam <span style="color:#d32f2f;">*</span></label>
+                            <input type="text" id="name" name="name" placeholder="Je naam" required>
+                        </div>
+                        <div style="margin-bottom:5px; text-align:left;">
+                            <label for="email">E-mailadres <span style="color:#d32f2f;">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="jouw@email.nl" required>
+                        </div>
+                        <label class="checkbox-label">
+                            <input type="checkbox" required>
+                            <span>Ja, ik wil mijn demo-profiel bekijken</span>
+                        </label>
+                        <button type="submit" class="btn-optin-submit">
+                            Bekijk mijn development-profiel →
+                        </button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            document.getElementById('emailForm').addEventListener('submit', async e => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                btn.textContent = 'Momentje...';
+                btn.disabled = true;
+
+                userData.name  = document.getElementById('name').value.trim();
+                userData.email = document.getElementById('email').value.trim();
+
+                // Vul voornaam in op resultaatpagina's
+                document.querySelectorAll('.user-firstname').forEach(el => {
+                    el.textContent = userData.name;
+                });
+
+                try {
+                    await sendToGoogleSheet(userData.name, userData.email);
+                    isQuizFinished = true;
+                    overlay.remove();
+                    history.pushState({ page: 'result' }, '');
+                    showResult();
+                } catch (err) {
+                    console.error(err);
+                    alert('Er ging iets mis met het verzenden. Je resultaten worden nu wel getoond.');
+                    isQuizFinished = true;
+                    overlay.remove();
+                    history.pushState({ page: 'result' }, '');
+                    showResult();
+                }
+            });
+        }
+
+        async function sendToGoogleSheet(name, email) {
+            // Portfolio demo: intentionally no external request is made.
+            console.log("Demo submission:", {
+                name: name,
+                email: email,
+                result: determineType().name,
+                score: totalScore
+            });
+            await new Promise(r => setTimeout(r, 250));
+        }
+
+        function determineType() {
+            if (totalScore >= 19) {
+                return { name: "Builder" };
+            }
+            if (totalScore >= 12 && totalScore <= 18) {
+                return { name: "Architect" };
+            }
+            return { name: "ProblemSolver" };
+        }
+
+        function showResult() {
+            document.querySelectorAll('.question-container, .quiz-buttons, .progress-bar').forEach(el => {
+                el.style.display = 'none';
+            });
+
+            // Verwijder eventuele overlay als die nog bestaat
+            const existingOverlay = document.querySelector('.email-overlay');
+            if (existingOverlay) existingOverlay.remove();
+
+            const result = determineType();
+            
+            document.querySelectorAll('.result-page').forEach(el => el.classList.remove('active'));
+            
+            const el = document.getElementById("result" + result.name);
+            if (el) {
+                el.classList.add("active");
+            }
+        }
+    </script>
+</body>
+</html>
